@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro Interativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .display {
+            font-size: 180px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 20px #ff0000;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        button {
+            width: 300px;
+            height: 180px;
+            font-size: 80px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #000;
+        }
+
+        .btn-decrease {
+            background-color: #fff;
+        }
+
+        .btn-decrease:hover {
+            background-color: #ff0000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .btn-start {
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        .btn-start:hover {
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .btn-increase {
+            background-color: #fff;
+        }
+
+        .btn-increase:hover {
+            background-color: #ff0000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .btn-reset {
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        .btn-reset:hover {
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="display" id="display">00:00</div>
+        <div class="buttons">
+            <button class="btn-decrease" onclick="decreaseTime()">−</button>
+            <button class="btn-start" id="startBtn" onclick="toggleTimer()">Iniciar</button>
+            <button class="btn-reset" onclick="resetTimer()">Resetar</button>
+            <button class="btn-increase" onclick="increaseTime()">+</button>
+        </div>
+    </div>
+
+    <script>
+        let totalSeconds = 60;
+        let isRunning = false;
+        let intervalId = null;
+
+        function updateDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            document.getElementById('display').textContent = 
+                String(minutes).padStart(2, '0') + ':' + 
+                String(seconds).padStart(2, '0');
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('startBtn');
+            
+            if (isRunning) {
+                clearInterval(intervalId);
+                isRunning = false;
+                btn.textContent = 'Iniciar';
+            } else {
+                if (totalSeconds <= 0) return;
+                
+                isRunning = true;
+                btn.textContent = 'Pausar';
+                
+                intervalId = setInterval(() => {
+                    if (totalSeconds > 0) {
+                        totalSeconds--;
+                        updateDisplay();
+                    } else {
+                        clearInterval(intervalId);
+                        isRunning = false;
+                        btn.textContent = 'Iniciar';
+                    }
+                }, 1000);
+            }
+        }
+
+        function increaseTime() {
+            totalSeconds += 60;
+            updateDisplay();
+        }
+
+        function decreaseTime() {
+            if (totalSeconds > 0) {
+                totalSeconds -= 60;
+                updateDisplay();
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(intervalId);
+            totalSeconds = 60;
+            isRunning = false;
+            document.getElementById('startBtn').textContent = 'Iniciar';
+            updateDisplay();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
