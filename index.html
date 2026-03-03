@@ -33,6 +33,40 @@
             justify-content: center;
         }
 
+        .input-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .input-section input {
+            width: 150px;
+            height: 60px;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            text-align: center;
+        }
+
+        .input-section button {
+            width: 120px;
+            height: 60px;
+            font-size: 18px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .input-section button:hover {
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.05);
+        }
+
         .display {
             font-size: 180px;
             font-weight: bold;
@@ -108,6 +142,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="input-section">
+            <input type="number" id="timeInput" placeholder="Minutos" min="1" value="1">
+            <button onclick="setCustomTime()">Definir</button>
+        </div>
         <div class="display" id="display">00:00</div>
         <div class="buttons">
             <button class="btn-decrease" onclick="decreaseTime()">−</button>
@@ -128,6 +166,16 @@
             document.getElementById('display').textContent = 
                 String(minutes).padStart(2, '0') + ':' + 
                 String(seconds).padStart(2, '0');
+        }
+
+        function setCustomTime() {
+            const input = document.getElementById('timeInput').value;
+            const minutes = parseInt(input);
+            
+            if (minutes > 0 && !isRunning) {
+                totalSeconds = minutes * 60;
+                updateDisplay();
+            }
         }
 
         function toggleTimer() {
@@ -162,7 +210,7 @@
         }
 
         function decreaseTime() {
-            if (totalSeconds > 0) {
+            if (totalSeconds > 60) {
                 totalSeconds -= 60;
                 updateDisplay();
             }
